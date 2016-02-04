@@ -27,7 +27,7 @@ public class Player implements MovingCharacter{
         Position = position;
         image = texture;
         this.facing = facing;
-        animationSpeed = 100;
+        animationSpeed = 60;
         animationX = 1;
         animationY = 1;
         moving = false;

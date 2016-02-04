@@ -35,6 +35,11 @@ public class Game extends ApplicationAdapter {
     private int screenHeight;
     private int tileSize;
 
+
+    private int stepsForATile;
+    private boolean notMoving;
+    private Vector2 destination;
+
     private int totalTiles;
 
     public Game(Integer screenHeight,Integer screenWidth) {
@@ -57,6 +62,12 @@ public class Game extends ApplicationAdapter {
         random = new Random();
         tileSize = 16;
 
+        notMoving=true;
+        stepsForATile = 2;
+        destination = camera;
+
+
+
         totalTiles = 0;
 
     }
@@ -69,10 +80,29 @@ public class Game extends ApplicationAdapter {
 
         //dealing with playeranimation and moving of camera
         player1.setMoving(false);
-        if (Gdx.input.isKeyPressed(Input.Keys.W)) {camera.add(0, 16);player1.setMoving(true);player1.setFacing(Facing.NORTH);}
-        else if (Gdx.input.isKeyPressed(Input.Keys.S)) {camera.add(0, -16);player1.setMoving(true);player1.setFacing(Facing.SOUTH);}
-        else if (Gdx.input.isKeyPressed(Input.Keys.D)) {camera.add(16, 0);player1.setMoving(true);player1.setFacing(Facing.EAST);}
-        else if (Gdx.input.isKeyPressed(Input.Keys.A)) {camera.add(-16, 0);player1.setMoving(true);player1.setFacing(Facing.WEST);}
+
+
+        //if(notMoving) {
+            if (Gdx.input.isKeyPressed(Input.Keys.W)) {
+                destination = destination.add(0, tileSize/2);
+                player1.setMoving(true);
+                player1.setFacing(Facing.NORTH);
+            } else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
+                destination = destination.add(0, -tileSize/2);
+                player1.setMoving(true);
+                player1.setFacing(Facing.SOUTH);
+            } else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
+                destination = destination.add(tileSize/2, 0);
+                player1.setMoving(true);
+                player1.setFacing(Facing.EAST);
+            } else if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+                destination = destination.add(-tileSize/2, 0);
+                player1.setMoving(true);
+                player1.setFacing(Facing.WEST);
+            }
+        //}
+       // movingTowards(destination,camera);
+
 
         generateTerrainTileMap(renderDistanceY, renderDistanceX); //tileMap
         generateObjectMap(renderDistanceY,renderDistanceX); //objectMap
@@ -126,12 +156,12 @@ public class Game extends ApplicationAdapter {
 
     public void generateTerrainTileMap(Integer renderDistanceY,Integer renderDistanceX){
 
-        for (int i =((int) (Math.floor(camera.y / tileSize)));i<renderDistanceY+(int) (Math.floor(camera.y / tileSize));i++) {
+        for (int i =(((int) (Math.floor(camera.y / tileSize))));i<renderDistanceY+(int) (Math.floor(camera.y / tileSize));i++) {
             if (!(tileMap.containsKey(i))) {
                 tileMap.put( i, new HashMap<Integer, Terrain>());
             }
 
-            for (int j=((int) (Math.floor(camera.x / tileSize)));j<renderDistanceX+(int) (Math.floor(camera.x / tileSize));j++) {
+            for (int j=(((int) (Math.floor(camera.x / tileSize))));j<renderDistanceX+(int) (Math.floor(camera.x / tileSize));j++) {
                 if (!(tileMap.get(i).containsKey(j))) {
 
                     int randomizer = random.nextInt(6);
@@ -178,10 +208,19 @@ public class Game extends ApplicationAdapter {
 
 
 
-    public Boolean movmentAllowed(){
+    public void movingTowards(Vector2 destination, Vector2 currentPosition){
 
-
-        return false;
+        if(currentPosition.x!=destination.x){
+            camera.x = camera.x+(tileSize/stepsForATile);
+            notMoving=false;
+        }
+        if(currentPosition.y!=destination.y){
+            camera.y = camera.y+(tileSize/stepsForATile);
+            notMoving=false;
+        }
+        if(camera==destination) {
+            notMoving = true;
+        }
     }
     public void dispose(){
         batch.dispose();
