@@ -82,26 +82,26 @@ public class Game extends ApplicationAdapter {
         player1.setMoving(false);
 
 
-        //if(notMoving) {
+        if(notMoving) {
             if (Gdx.input.isKeyPressed(Input.Keys.W)) {
-                destination = destination.add(0, tileSize/2);
+                destination = destination.add(0, tileSize);
                 player1.setMoving(true);
                 player1.setFacing(Facing.NORTH);
             } else if (Gdx.input.isKeyPressed(Input.Keys.S)) {
-                destination = destination.add(0, -tileSize/2);
+                destination = destination.add(0, -tileSize);
                 player1.setMoving(true);
                 player1.setFacing(Facing.SOUTH);
             } else if (Gdx.input.isKeyPressed(Input.Keys.D)) {
-                destination = destination.add(tileSize/2, 0);
+                destination = destination.add(tileSize, 0);
                 player1.setMoving(true);
                 player1.setFacing(Facing.EAST);
             } else if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-                destination = destination.add(-tileSize/2, 0);
+                destination = destination.add(-tileSize, 0);
                 player1.setMoving(true);
                 player1.setFacing(Facing.WEST);
             }
-        //}
-       // movingTowards(destination,camera);
+        }
+        movingTowards();
 
 
         generateTerrainTileMap(renderDistanceY, renderDistanceX); //tileMap
@@ -119,12 +119,12 @@ public class Game extends ApplicationAdapter {
 
                         case GRASS:
                             batch.begin();
-                            batch.draw(grass, (j * tileSize) + (camera.x % tileSize), (i * tileSize) + (camera.y) % tileSize);
+                            batch.draw(grass, (j * tileSize) - Math.abs((camera.x % tileSize)), (i * tileSize) - Math.abs((camera.y) % tileSize));
                             batch.end();
                             break;
                         case ROCK:
                             batch.begin();
-                            batch.draw(rock, (j * tileSize) + (camera.x % tileSize), (i * tileSize) + (camera.y) % tileSize);
+                            batch.draw(rock, (j * tileSize) - Math.abs((camera.x % tileSize)), (i * tileSize) - Math.abs((camera.y) % tileSize));
                             batch.end();
                             break;
                         case WATER:
@@ -135,7 +135,7 @@ public class Game extends ApplicationAdapter {
 
                     case ROCK:
                         batch.begin();
-                        batch.draw(rockObject, (j * tileSize) + (camera.x % tileSize), (i * tileSize) + (camera.y) % tileSize);
+                        batch.draw(rockObject, (j * tileSize) - Math.abs((camera.x % tileSize)), (i * tileSize) - Math.abs((camera.y) % tileSize));
                         batch.end();
                         break;
                     case NONE:
@@ -208,14 +208,14 @@ public class Game extends ApplicationAdapter {
 
 
 
-    public void movingTowards(Vector2 destination, Vector2 currentPosition){
+    public void movingTowards(){
 
-        if(currentPosition.x!=destination.x){
-            camera.x = camera.x+(tileSize/stepsForATile);
+        if(camera.x!=destination.x){
+            camera.x =+(tileSize/stepsForATile);
             notMoving=false;
         }
-        if(currentPosition.y!=destination.y){
-            camera.y = camera.y+(tileSize/stepsForATile);
+        if(camera.y!=destination.y){
+            camera.y =+(tileSize/stepsForATile);
             notMoving=false;
         }
         if(camera==destination) {
